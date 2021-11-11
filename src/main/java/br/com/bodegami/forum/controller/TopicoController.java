@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.alura.forum.modelo.Curso;
-import br.com.alura.forum.modelo.Topico;
 import br.com.bodegami.forum.controller.dto.TopicoDto;
+import br.com.bodegami.forum.modelo.Curso;
+import br.com.bodegami.forum.modelo.Topico;
 
 @RestController
 public class TopicoController {
