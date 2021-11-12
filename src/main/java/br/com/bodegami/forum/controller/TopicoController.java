@@ -21,9 +21,15 @@ public class TopicoController {
 
 	@ResponseBody
 	@RequestMapping("/topicos")
-	public List<TopicoDto> lista() {
-		List<Topico> lista = repository.findAll();
-		return TopicoDto.converter(lista);
+	public List<TopicoDto> lista(String nomeCurso) {
+		if (nomeCurso == null) {
+			List<Topico> lista = repository.findAll();
+			return TopicoDto.converter(lista);
+		} else {
+			List<Topico> lista = repository.carregarPorNomeDoCurso(nomeCurso);
+			return TopicoDto.converter(lista);
+		}
+		
 	}
 
 }
