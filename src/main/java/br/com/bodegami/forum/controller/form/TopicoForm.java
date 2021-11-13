@@ -1,17 +1,25 @@
 package br.com.bodegami.forum.controller.form;
 
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.validator.constraints.Length;
+
 import br.com.bodegami.forum.modelo.Curso;
 import br.com.bodegami.forum.modelo.Topico;
 import br.com.bodegami.forum.repository.CursoRepository;
 
 public class TopicoForm {
 
+	@NotBlank
+	@Length(min = 5)
 	private String titulo;
+
+	@NotBlank
+	@Length(min = 10)
 	private String mensagem;
+
+	@NotBlank
 	private String nomeCurso;
-	
-	
-	
 
 	public String getTitulo() {
 		return titulo;
@@ -40,7 +48,7 @@ public class TopicoForm {
 	public Topico converter(CursoRepository cursoRepository) {
 		Curso curso = cursoRepository.findByNome(nomeCurso);
 		return new Topico(titulo, mensagem, curso);
-		
+
 	}
 
 }
