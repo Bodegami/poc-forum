@@ -2,6 +2,7 @@ package br.com.bodegami.forum.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -64,23 +65,39 @@ public class TopicoController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<DetalhesDoTopicoDto> detalhar(@PathVariable Long id) {
-		Topico topico = topicoRepository.getById(id);
-		DetalhesDoTopicoDto dto = new DetalhesDoTopicoDto(topico);
-		return ResponseEntity.ok().body(dto);
+		Optional<Topico> topico = topicoRepository.findById(id);
+		if (topico.isPresent()) {
+			DetalhesDoTopicoDto dto = new DetalhesDoTopicoDto(topico.get());
+			return ResponseEntity.ok().body(dto);
+		}
+
+		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PutMapping("/{id}")
 	@Transactional
 	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form) {
-		Topico topico = form.atualizar(id,topicoRepository);
-		return ResponseEntity.ok().body(new TopicoDto(topico));
+		Optional<Topico> optional = topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			Topico topico = form.atualizar(id, topicoRepository);
+			return ResponseEntity.ok().body(new TopicoDto(topico));
+		}
+
+		return ResponseEntity.notFound().build();
+
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@Transactional
 	public ResponseEntity<String> remover(@PathVariable Long id) {
-		topicoRepository.deleteById(id);
-		return ResponseEntity.ok().body("Topico de id: " + id + " excluido com sucesso...");
+		Optional<Topico> optional = topicoRepository.findById(id);
+		if (optional.isPresent()) {
+			topicoRepository.deleteById(id);
+			return ResponseEntity.ok().body("Topico de id: " + id + " excluido com sucesso...");
+		}
+
+		return ResponseEntity.notFound().build();
+
 	}
 
 }
