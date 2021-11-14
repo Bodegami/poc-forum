@@ -36,6 +36,13 @@ import br.com.bodegami.forum.repository.TopicoRepository;
 @RestController
 @RequestMapping("/topicos")
 public class TopicoController {
+	
+	/*
+		O uso do Cacheable faz sentido nas tabelas que quase nunca sofrem uma alteracao,
+		pois se usarmos em tabelas que sao constantemente atualizadas, ele pode acabar 
+		comprometendo a performance da aplicacao por estar sempre invalidando o cache
+		com o CacheEvict.
+	*/
 
 	private final TopicoRepository topicoRepository;
 	private final CursoRepository cursoRepository;
