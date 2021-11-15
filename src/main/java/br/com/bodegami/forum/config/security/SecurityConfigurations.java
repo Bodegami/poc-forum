@@ -7,33 +7,41 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
-	//Configuracoes de autenticacao
+	private final AutenticacaoService autenticacaoService;
+
+	public SecurityConfigurations(AutenticacaoService autenticacaoService) {
+		this.autenticacaoService = autenticacaoService;
+	}
+
+	// Configuracoes de autenticacao
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
+		auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
 	}
-	
-	
-	//Configuracoes de autorizacao
+
+	// Configuracoes de autorizacao
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-		.antMatchers(HttpMethod.GET ,"/topicos").permitAll()
-		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
-		.anyRequest().authenticated()
-		.and().formLogin();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/topicos").permitAll()
+				.antMatchers(HttpMethod.GET, "/topicos/*").permitAll().anyRequest().authenticated().and().formLogin();
 	}
-	
-	
-	//Configuracoes de recursos estaticos(js, css, imagens, etc.)
+
+	// Configuracoes de recursos estaticos(js, css, imagens, etc.)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 
 	}
-	
+
+	/*
+	 * CRIPTOGRAFANDO UMA SENHA
+	 * 
+	 * public static void main(String[] args) { System.out.println(new
+	 * BCryptPasswordEncoder().encode("123456")); }
+	 */
 }
