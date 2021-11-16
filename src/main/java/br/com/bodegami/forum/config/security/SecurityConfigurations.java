@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
 	private final AutenticacaoService autenticacaoService;
+	private final TokenService tokenService;
 	
 	@Override
 	@Bean
@@ -25,8 +26,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		return super.authenticationManager();
 	}
 
-	public SecurityConfigurations(AutenticacaoService autenticacaoService) {
+	public SecurityConfigurations(AutenticacaoService autenticacaoService, TokenService tokenService) {
 		this.autenticacaoService = autenticacaoService;
+		this.tokenService = tokenService;
 	}
 
 	// Configuracoes de autenticacao
@@ -46,7 +48,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		//.and().formLogin()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().addFilterBefore(new AutenticacaoViaTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	// Configuracoes de recursos estaticos(js, css, imagens, etc.)
