@@ -13,12 +13,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.bodegami.forum.repository.UsuarioRepository;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 
 	private final AutenticacaoService autenticacaoService;
 	private final TokenService tokenService;
+	private final UsuarioRepository usuarioRepository;
 	
 	@Override
 	@Bean
@@ -26,9 +29,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		return super.authenticationManager();
 	}
 
-	public SecurityConfigurations(AutenticacaoService autenticacaoService, TokenService tokenService) {
+	public SecurityConfigurations(AutenticacaoService autenticacaoService, TokenService tokenService, 
+			UsuarioRepository usuarioRepository) {
 		this.autenticacaoService = autenticacaoService;
 		this.tokenService = tokenService;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	// Configuracoes de autenticacao
@@ -48,7 +53,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		//.and().formLogin()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+		.and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	// Configuracoes de recursos estaticos(js, css, imagens, etc.)
