@@ -2,6 +2,7 @@ package br.com.bodegami.forum.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import br.com.bodegami.forum.controller.form.LoginForm;
 
 @RestController
 @RequestMapping("/auth")
+@Profile("prod")
 public class AutenticacaoController {
 
 	private final AuthenticationManager authManager;
